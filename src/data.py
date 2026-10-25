@@ -3,28 +3,33 @@ from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 from pathlib import Path
 
-MAIN_PATH = Path(__file__).resolve().parent()
+MAIN_PATH = Path(__file__).resolve().parent.parent
 
 
-def data_extracter(MAIN_PATH : Path = MAIN_PATH):
-    df = pd.read_csv(MAIN_PATH / 'datasets' / 'Titanic-data' / 'train.csv')
-    df['FamilySize'] = df['SibSp'] + df['Parch'] + 1
-    df = df.dropna(subset=['Embarked'])
-    df = pd.get_dummies(df, columns=['Sex', 'Embarked'], drop_first=True)
+class data_extracter:
+    def __init__(self, MAIN_PATH : Path = MAIN_PATH):
+        self.df = pd.read_csv(MAIN_PATH / 'datasets' / 'Titanic-data' / 'train.csv')
+        self.df['FamilySize'] = self.df['SibSp'] + self.df['Parch'] + 1
+        self.df = self.df.dropna(subset=['Embarked'])
+        self.df = pd.get_dummies(self.df, columns=['Sex', 'Embarked'], drop_first=True)
 
-    X = df.drop(columns=['PassengerId', 'Survived', 'Name', 'SibSp', 'Parch', 'Ticket', 'Cabin'])
-    y = df['Survived']
+        self.X = self.df.drop(columns=['PassengerId', 'Survived', 'Name', 'SibSp', 'Parch', 'Ticket', 'Cabin'])
+        self.y = self.df['Survived']
 
-    X_train, X_test, y_train, y_test = train_test_split(X, y, stratify=y, random_state=42, test_size=0.2)
+        self.X_train, self.X_test, self.y_train, self.y_test = train_test_split(self.X, self.y, stratify=self.y, random_state=42, test_size=0.2)
 
-    X_train['Age'] = X_train['Age'].fillna(X_train['Age'].median())
-    X_test['Age'] = X_test['Age'].fillna(X_train['Age'].median())
+    def train_data(self):
+        self.X_train['Age'] = self.X_train['Age'].fillna(self.X_train['Age'].median())
+        scaler = StandardScaler()
+        X_train_scaled = scaler.fit_transform(self.X_train)
+        y_train_mat = self.y_train.values.reshape(-1, 1)
 
-    scaler = StandardScaler()
-    X_train_scaled = scaler.fit_transform(X_train)
-    X_test_scaled = scaler.transform(X_test)
+        return X_train_scaled, y_train_mat
 
-    y_train_mat = y_train.values.reshape(-1, 1)
-    y_test_mat = y_test.values.reshape(-1, 1)
+    def test_data(self):
+        self.X_test['Age'] = self.X_test['Age'].fillna(self.X_train['Age'].median())
+        scaler = StandardScaler()
+        X_test_scaled = scaler.transform(self.X_test)
+        y_test_mat = self.y_test.values.reshape(-1, 1)
 
-    return X_train_scaled, X_test_scaled, y_train_mat, y_test_mat
+        return X_test_scaled, y_test_mat
