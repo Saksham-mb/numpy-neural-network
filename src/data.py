@@ -18,18 +18,21 @@ class data_extracter:
 
         self.X_train, self.X_test, self.y_train, self.y_test = train_test_split(self.X, self.y, stratify=self.y, random_state=42, test_size=0.2)
 
+        self.X_train_median_age=self.X_train['Age'].median()
+        self.X_train['Age'] = self.X_train['Age'].fillna(self.X_train_median_age)
+        self.X_test['Age'] = self.X_test['Age'].fillna(self.X_train_median_age)
+
+        self.scaler = StandardScaler()
+        self.scaler.fit(self.X_train)
+
     def train_data(self):
-        self.X_train['Age'] = self.X_train['Age'].fillna(self.X_train['Age'].median())
-        scaler = StandardScaler()
-        X_train_scaled = scaler.fit_transform(self.X_train)
+        X_train_scaled = self.scaler.transform(self.X_train)
         y_train_mat = self.y_train.values.reshape(-1, 1)
 
         return X_train_scaled, y_train_mat
 
     def test_data(self):
-        self.X_test['Age'] = self.X_test['Age'].fillna(self.X_train['Age'].median())
-        scaler = StandardScaler()
-        X_test_scaled = scaler.transform(self.X_test)
+        X_test_scaled = self.scaler.transform(self.X_test)
         y_test_mat = self.y_test.values.reshape(-1, 1)
 
         return X_test_scaled, y_test_mat
