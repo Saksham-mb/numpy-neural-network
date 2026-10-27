@@ -1,8 +1,9 @@
-from data import data_extracter
+from data import DataExtracter
 import model
-from numpy.random import seed as seed
+from numpy.random import seed
 from pathlib import Path
 import pickle
+import json
 
 seed(42)
 
@@ -11,7 +12,7 @@ MODEL_DIR = PROJECT_ROOT / 'models'
 
 MODEL_DIR.mkdir(parents=True, exist_ok=True)
 
-train_data_loader=data_extracter()
+train_data_loader=DataExtracter()
 X_train, y_train = train_data_loader.train_data()
 model_0=model.NumpyNeuralNetwork(X_train.shape[1], 1, 64, 64)
 
@@ -26,6 +27,11 @@ for epoch in range(epochs):
 
 acc=(labels==y_train).mean()
 print(f'Training accuracy: {acc*100:.2f}%')
+
+hyperparameters = {'n_x': model_0.n_x,'n_y': model_0.n_y,'n_h_1': model_0.n_h_1,'n_h_2': model_0.n_h_2,'epochs': epochs,'lr': lr}
+
+with open(MODEL_DIR / 'config.json', 'w') as f:
+    json.dump(hyperparameters, f, indent=4)
 
 with open(MODEL_DIR / 'NumpyNeuralNetwork.pkl', 'wb') as f:
     pickle.dump(model_0.params, f)

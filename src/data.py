@@ -6,7 +6,7 @@ from pathlib import Path
 MAIN_PATH = Path(__file__).resolve().parent.parent
 
 
-class data_extracter:
+class DataExtracter:
     def __init__(self, MAIN_PATH : Path = MAIN_PATH):
         self.df = pd.read_csv(MAIN_PATH / 'datasets' / 'Titanic-data' / 'train.csv')
         self.df['FamilySize'] = self.df['SibSp'] + self.df['Parch'] + 1

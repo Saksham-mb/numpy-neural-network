@@ -1,7 +1,8 @@
 import pickle
 from pathlib import Path
 import model
-from data import data_extracter
+import json
+from data import DataExtracter
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 MODEL_DIR = PROJECT_ROOT / 'models'
@@ -9,8 +10,14 @@ MODEL_DIR = PROJECT_ROOT / 'models'
 with open(MODEL_DIR / 'NumpyNeuralNetwork.pkl', 'rb') as f:
     trained_params=pickle.load(f)
 
-data_loader=data_extracter()
+with open(MODEL_DIR / 'config.json', 'r') as f:
+    hp = json.load(f)
+
+data_loader=DataExtracter()
 X_test, y_test = data_loader.test_data()
+
+model_0 = model.NumpyNeuralNetwork(n_x=hp['n_x'],n_y=hp['n_y'],n_h_1=hp['n_h_1'],n_h_2=hp['n_h_2'])
+model_0.params = trained_params
 
 model_0=model.NumpyNeuralNetwork(X_test.shape[1], 1, 64, 64)
 
