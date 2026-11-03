@@ -29,6 +29,12 @@ class NumpyNeuralNetwork:
 
         return self.A3
 
+    def compute_loss(self, y: np.ndarray):
+        eps=1e-15
+        clipped_A3=np.clip(self.A3, eps, 1-eps)
+        loss=-(1/y.shape[0])*np.sum(y*np.log(clipped_A3)+(1-y)*np.log(1-clipped_A3))
+        return float(loss)
+
     def backward(self, X: np.ndarray, y: np.ndarray):
         m = X.shape[0]
 

@@ -1,0 +1,8 @@
+{
+    "numpy_nn": {
+        "test_accuracy": 83.15
+    },
+    "logistic_regression": {
+        "test_accuracy": 80.34
+    }
+}
