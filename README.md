@@ -1,5 +1,5 @@
 # Titanic Survival Prediction — NumPy Neural Network
-A fully custom Neural Network built completely from scratch using numpy matrix calculaion. Solely showcasing neural network basics and what actually happens under the hood in a basic neural network.
+A fully custom Neural Network built completely from scratch using numpy matrix calculaion. Showcasing neural network basics and what actually happens under the hood in a basic neural network.
 
 ## Project Structure
 
@@ -16,7 +16,6 @@ numpy-neural-network/
 │   ├── model.py
 │   └── train.py
 ├── .gitignore
-├── practice.ipynb
 ├── README.md
 └── requirements.txt
 
